@@ -1,21 +1,29 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Create Post</title>
-  </head>
-  <body>
-    <h1>Create a New Post</h1>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Post</title>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="mt-4">Create a New Post</h1>
     {% if error %}
-      <p style="color: red;">{{ error }}</p>
+      <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
-    <form method="post">
-      <label for="title">Title:</label>
-      <input type="text" id="title" name="title" required>
+    <form method="post" class="mt-4">
+      <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" class="form-control" id="title" name="title" required>
+      </div>
       <br>
-      <label for="content">Content:</label>
-      <textarea id="content" name="content" required></textarea>
+      <div class="form-group">
+        <label for="content">Content:</label>
+        <textarea class="form-control" id="content" name="content" required></textarea>
+      </div>
       <br>
-      <button type="submit">Submit</button>
+      <div style="text-align: center;"><button type="submit" class="btn btn-primary">Submit</button></div>
     </form>
-  </body>
+  </div>
+</body>
 </html>
