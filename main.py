@@ -10,6 +10,7 @@ from pymongo import MongoClient
 from datetime import datetime
 
 DB_PASSWORD = getenv("DB_PASSWORD")
+BACKEND_APP = getenv("BACKEND_APP")
 uri = f"mongodb+srv://persky:{DB_PASSWORD}@cluster0.jevvu.mongodb.net/?appName=Cluster0"
 client = MongoClient(uri)
 db = client["forum_db"]
@@ -49,7 +50,7 @@ def home(request: Request):
     posts = list(collection_posts.find().sort("created_at", -1))
     for post in posts:
         post["_id"] = str(post["_id"])
-    return templates.TemplateResponse("index.html", {"request": request, "posts": posts})
+    return templates.TemplateResponse("index.html", {"request": request, "posts": posts, "backend_app": BACKEND_APP})
 
 
 @app.get("/post/{post_id}", response_class=HTMLResponse)
@@ -63,7 +64,7 @@ def get_post(request: Request, post_id: str):
     for comment in comments:
         comment["_id"] = str(comment["_id"])
         comment["created_at"] = comment["created_at"].strftime("%H:%M")
-    return templates.TemplateResponse("post.html", {"request": request, "post": post, "comments": comments})
+    return templates.TemplateResponse("post.html", {"request": request, "post": post, "comments": comments, "backend_app": BACKEND_APP})
 
 
 @app.post("/post/{post_id}/comment", response_class=HTMLResponse)
@@ -80,7 +81,7 @@ def add_comment(request: Request, post_id: str, content: str = Form(...)):
 
 @app.get("/create", response_class=HTMLResponse)
 def create_post_form(request: Request):
-    return templates.TemplateResponse("create.html", {"request": request})
+    return templates.TemplateResponse("create.html", {"request": request, "backend_app": BACKEND_APP})
 
 
 @app.post("/create", response_class=HTMLResponse)
@@ -93,7 +94,7 @@ def create_post(request: Request, title: str = Form(...), content: str = Form(..
         "created_at": datetime.now(),
     }
     collection_posts.insert_one(new_post)
-    return templates.TemplateResponse("create_success.html", {"request": request})
+    return templates.TemplateResponse("create_success.html", {"request": request, "backend_app": BACKEND_APP})
 
 
 @app.delete("/delete/{post_id}")

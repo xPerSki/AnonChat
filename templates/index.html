@@ -8,7 +8,7 @@
 <ul class="list-group mt-4">
   {% for post in posts %}
     <li class="list-group-item">
-      <a href="/post/{{ post._id }}"><strong>{{ post.title }}</strong></a><br>
+      <a href="{{ backend_app }}/post/{{ post._id }}"><strong>{{ post.title }}</strong></a><br>
       {{ post.content }}
     </li>
   {% else %}
