@@ -19,7 +19,7 @@
 </ul>
 
 <h3 class="mt-4">Add a Comment</h3>
-<form method="post" action="{{ backend_app }}/post/{{ post._id }}/comment" class="mt-4">
+<form method="post" action="/post/{{ post._id }}/comment" class="mt-4">
   <div class="form-group">
     <label for="content">Comment:</label>
     <textarea class="form-control" id="content" name="content" required></textarea>
