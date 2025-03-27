@@ -1,13 +1,13 @@
-import uvicorn
-import logging
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
 from os import getenv
-from pymongo import MongoClient
-from pydantic import BaseModel
-from fastapi.staticfiles import StaticFiles
+
+import uvicorn
 from bson import ObjectId
+from fastapi import FastAPI, Request, HTTPException, Form
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
+from pymongo import MongoClient
 
 DB_PASSWORD = getenv("DB_PASSWORD")
 uri = f"mongodb+srv://persky:{DB_PASSWORD}@cluster0.jevvu.mongodb.net/?appName=Cluster0"
@@ -37,25 +37,30 @@ class User(BaseModel):
 
 @app.get("/")
 def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    posts = list(collection_posts.find())
+    return templates.TemplateResponse("index.html", {"request": request, "posts": posts})
 
 
-@app.get("/create")
-def create_post(request: Request):
+@app.get("/create", response_class=HTMLResponse)
+def create_post_form(request: Request):
     return templates.TemplateResponse("create.html", {"request": request})
 
 
-@app.post("/create")
-def create_post(request: Request, post=Post):
-    new_post = post.model_dump()
-    result = collection_posts.insert_one(new_post)
-    return {"id": str(result.inserted_id), "result": "Post created"}
+@app.post("/create", response_class=HTMLResponse)
+def create_post(request: Request, title: str = Form(...), content: str = Form(...)):
+    new_post = {
+        "id": str(ObjectId()),
+        "title": title,
+        "content": content,
+        "author_id": "Anonymous"
+    }
+    collection_posts.insert_one(new_post)
+    return templates.TemplateResponse("create_success.html", {"request": request})
 
 
 @app.delete("/delete/{post_id}")
-def get_post(request: Request, post_id: str):
-    post = collection_posts.find_one({"id": ObjectId(post_id)})
-    result = collection_posts.delete_one(post)
+def delete_post(request: Request, post_id: str):
+    result = collection_posts.delete_one({"id": post_id})
     if result.deleted_count == 1:
         return {"result": "Post deleted"}
     return {"result": "Post can't be deleted"}
@@ -63,19 +68,17 @@ def get_post(request: Request, post_id: str):
 
 @app.get("/get-post/{post_id}")
 def get_post(request: Request, post_id: str):
-    post = collection_posts.find_one({"id": ObjectId(post_id)})
+    post = collection_posts.find_one({"id": post_id})
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
-    post["id"] = str(post["id"])
     return post
 
 
 @app.get("/get-user/{user_id}")
 def get_user(request: Request, user_id: str):
-    user = collection_users.find_one({"user_id": ObjectId(user_id)})
+    user = collection_users.find_one({"user_id": user_id})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    user["user_id"] = str(user["user_id"])
     return user
 
 
