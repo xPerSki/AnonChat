@@ -1,6 +1,5 @@
-from os import getenv
-
 import uvicorn
+from os import getenv
 from bson import ObjectId
 from fastapi import FastAPI, Request, HTTPException, Form
 from fastapi.responses import HTMLResponse
@@ -8,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from pymongo import MongoClient
+from datetime import datetime
 
 DB_PASSWORD = getenv("DB_PASSWORD")
 uri = f"mongodb+srv://persky:{DB_PASSWORD}@cluster0.jevvu.mongodb.net/?appName=Cluster0"
@@ -37,7 +37,7 @@ class User(BaseModel):
 
 @app.get("/")
 def home(request: Request):
-    posts = list(collection_posts.find())
+    posts = list(collection_posts.find().sort("created_at", -1))  # Sort by creation date in descending order
     return templates.TemplateResponse("index.html", {"request": request, "posts": posts})
 
 
@@ -52,7 +52,8 @@ def create_post(request: Request, title: str = Form(...), content: str = Form(..
         "id": str(ObjectId()),
         "title": title,
         "content": content,
-        "author_id": "Anonymous"
+        "author_id": "Anonymous",
+        "created_at": datetime.now()  # Add creation date
     }
     collection_posts.insert_one(new_post)
     return templates.TemplateResponse("create_success.html", {"request": request})

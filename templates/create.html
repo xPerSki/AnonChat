@@ -1,29 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Create Post</title>
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-</head>
-<body>
-  <div class="container">
-    <h1 class="mt-4">Create a New Post</h1>
-    {% if error %}
-      <div class="alert alert-danger">{{ error }}</div>
-    {% endif %}
-    <form method="post" class="mt-4">
-      <div class="form-group">
-        <label for="title">Title:</label>
-        <input type="text" class="form-control" id="title" name="title" required>
-      </div>
-      <br>
-      <div class="form-group">
-        <label for="content">Content:</label>
-        <textarea class="form-control" id="content" name="content" required></textarea>
-      </div>
-      <br>
-      <div style="text-align: center;"><button type="submit" class="btn btn-primary">Submit</button></div>
-    </form>
+{% extends "navbar.html" %}
+
+{% block title %}Create Post{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Create a New Post</h1>
+{% if error %}
+  <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+<form method="post" action="/create" class="mt-4">
+  <div class="form-group">
+    <label for="title">Title:</label>
+    <input type="text" class="form-control" id="title" name="title" required>
   </div>
-</body>
-</html>
+  <br>
+  <div class="form-group">
+    <label for="content">Content:</label>
+    <textarea class="form-control" id="content" name="content" required></textarea>
+  </div>
+  <br>
+  <div style="text-align: center;"><button type="submit" class="btn btn-primary">Submit</button></div>
+</form>
+
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+tinymce.init({
+  selector: '#content',
+  menubar: false
+});
+</script>
+{% endblock %}

@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Post Created</title>
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-</head>
-<body>
-  <div class="container">
-    <h1 class="mt-4">Post Created Successfully!</h1>
-    <a href="/" class="btn btn-primary mt-4">Go back to Home</a>
-  </div>
-</body>
-</html>
+{% extends "navbar.html" %}
+
+{% block title %}Post Created{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Post Created Successfully!</h1>
+<a href="/" class="btn btn-primary mt-4">Go back to Home</a>
+{% endblock %}

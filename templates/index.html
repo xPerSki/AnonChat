@@ -1,25 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Home</title>
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-</head>
-<body>
-  <div class="container">
-    <h1 class="mt-4">This is homepage</h1>
-    <a href="/create" class="btn btn-primary mt-4">Create</a>
-    <h2 class="mt-4">Posts</h2>
-    <ul class="list-group mt-4">
-      {% for post in posts %}
-        <li class="list-group-item">
-          <strong>{{ post.title }}</strong><br>
-          {{ post.content }}
-        </li>
-      {% else %}
-        <li class="list-group-item">No posts available.</li>
-      {% endfor %}
-    </ul>
-  </div>
-</body>
-</html>
+{% extends "navbar.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">This is homepage</h1>
+<h2 class="mt-4">Posts</h2>
+<ul class="list-group mt-4">
+  {% for post in posts %}
+    <li class="list-group-item">
+      <strong>{{ post.title }}</strong><br>
+      {{ post.content }}
+    </li>
+  {% else %}
+    <li class="list-group-item">No posts available.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
