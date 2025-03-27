@@ -1,0 +1,30 @@
+{% extends "navbar.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+
+<h2 class="mt-4">Comments</h2>
+<ul class="list-group mt-4">
+  {% for comment in comments %}
+    <li class="list-group-item">
+      {{ comment.content }}<br>
+      <small>{{ comment.created_at }}</small>
+    </li>
+  {% else %}
+    <li class="list-group-item">No comments available.</li>
+  {% endfor %}
+</ul>
+
+<h3 class="mt-4">Add a Comment</h3>
+<form method="post" action="/post/{{ post._id }}/comment" class="mt-4">
+  <div class="form-group">
+    <label for="content">Comment:</label>
+    <textarea class="form-control" id="content" name="content" required></textarea>
+  </div>
+  <br>
+  <div style="text-align: center;"><button type="submit" class="btn btn-primary">Submit</button></div>
+</form>
+{% endblock %}

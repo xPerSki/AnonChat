@@ -3,12 +3,12 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 class="mt-4">This is homepage</h1>
+<!--<h1 class="mt-4">This is homepage</h1>-->
 <h2 class="mt-4">Posts</h2>
 <ul class="list-group mt-4">
   {% for post in posts %}
     <li class="list-group-item">
-      <strong>{{ post.title }}</strong><br>
+      <a href="/post/{{ post._id }}"><strong>{{ post.title }}</strong></a><br>
       {{ post.content }}
     </li>
   {% else %}
