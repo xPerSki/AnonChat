@@ -27,6 +27,7 @@ class Post(BaseModel):
     title: str
     content: str
     author_id: str
+    created_at: str
 
 
 class User(BaseModel):
@@ -37,13 +38,8 @@ class User(BaseModel):
 
 @app.get("/")
 def home(request: Request):
-    posts = list(collection_posts.find().sort("created_at", -1))  # Sort by creation date in descending order
+    posts = list(collection_posts.find().sort("created_at", -1))
     return templates.TemplateResponse("index.html", {"request": request, "posts": posts})
-
-
-@app.get("/create", response_class=HTMLResponse)
-def create_post_form(request: Request):
-    return templates.TemplateResponse("create.html", {"request": request})
 
 
 @app.post("/create", response_class=HTMLResponse)
@@ -53,7 +49,19 @@ def create_post(request: Request, title: str = Form(...), content: str = Form(..
         "title": title,
         "content": content,
         "author_id": "Anonymous",
-        "created_at": datetime.now()  # Add creation date
+        "created_at": datetime.now(),
+    }
+    collection_posts.insert_one(new_post)
+    return templates.TemplateResponse("create_success.html", {"request": request})
+
+
+@app.post("/create", response_class=HTMLResponse)
+def create_post(request: Request, title: str = Form(...), content: str = Form(...)):
+    new_post = {
+        "id": str(ObjectId()),
+        "title": title,
+        "content": content,
+        "author_id": "Anonymous"
     }
     collection_posts.insert_one(new_post)
     return templates.TemplateResponse("create_success.html", {"request": request})
