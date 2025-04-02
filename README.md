@@ -10,4 +10,5 @@
 
 ---
 
-- I used MongoDB; If you want to host the app yourself, you should probably make your own MongoDB cluster or port it to another db
+### Database Setup
+This project uses MongoDB. If you plan to host the application yourself, consider setting up your own MongoDB cluster or migrating to a different database system.
